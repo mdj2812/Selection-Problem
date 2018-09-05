@@ -28,8 +28,8 @@
 #define	USE_MERGE_SORT 0
 #define USE_QUICK_SORT 1
 
-#define N ((uint32_t)1000000)
-#define K (4)
+#define N ((uint32_t)100000)
+#define K (63)
 
 /*******************************************************************************
  * Types
