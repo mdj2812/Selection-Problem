@@ -24,12 +24,12 @@
 /*******************************************************************************
  * Macros
  ******************************************************************************/
-#define	USE_BUBBLE_SORT 1
-#define	USE_MERGE_SORT 0
-#define USE_QUICK_SORT 0
+#define	USE_BUBBLE_SORT 0
+#define	USE_MERGE_SORT 1
+#define USE_QUICK_SORT 1
 
 #define N (1000000)
-#define K (500000)
+#define K (N / 2)
 
 /*******************************************************************************
  * Types
@@ -38,9 +38,9 @@
 /*******************************************************************************
  * Internal function declaration
  ******************************************************************************/
-static uint32_t bubbleSortSelect(const uint32_t len, const uint32_t index);
-static uint32_t mergeSortSelect(const uint32_t len, const uint32_t index);
-static uint32_t quickSortSelect(const uint32_t len, const uint32_t index);
+static uint32_t bubbleSortSelect(void);
+static uint32_t mergeSortSelect(void);
+static uint32_t quickSortSelect(void);
 
 static void generateRandomNumberTable(uint32_t* nt, const uint32_t len);
 static int cmpfunc(const void * a, const void * b);
@@ -48,7 +48,8 @@ static int cmpfunc(const void * a, const void * b);
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-static uint32_t table[N];
+static unsigned int table[N];
+static unsigned int sortTable[N];
 
 /*******************************************************************************
  * Public function
@@ -57,26 +58,61 @@ int main() {
 	struct timeb start, end;
 	uint32_t diff;
 	uint32_t result = 0;
+	uint32_t i = 0;
 
 	generateRandomNumberTable(table, N);
 
-	ftime(&start);
-
 	// TODO: add operation here
 #if USE_BUBBLE_SORT
-	result = bubbleSortSelect(N, K);
-#elif USE_MERGE_SORT
-	result = mergeSortSelect(N, K);
-#elif USE_QUICK_SORT
-	result = quickSortSelect(N, K);
-#endif
+	for (i = 0; i< N; i++) {
+		sortTable[i] = table[i];
+	}
+
+	ftime(&start);
+
+	result = bubbleSortSelect();
 
 	ftime(&end);
 	diff = (uint32_t) (1000.0 * (end.time - start.time)
 			+ (end.millitm - start.millitm));
 
-	printf("Operation took %u milliseconds\r\n", diff);
-	printf("The %dth biggest number is: %d", K, result);
+	printf("bubbleSortSelect took %u milliseconds\r\n", diff);
+	printf("The %dth biggest number is: %d\r\n", K, result);
+#endif
+
+#if USE_MERGE_SORT
+	for (i = 0; i< N; i++) {
+		sortTable[i] = table[i];
+	}
+
+	ftime(&start);
+
+	result = mergeSortSelect();
+
+	ftime(&end);
+	diff = (uint32_t) (1000.0 * (end.time - start.time)
+			+ (end.millitm - start.millitm));
+
+	printf("mergeSortSelect took %u milliseconds\r\n", diff);
+	printf("The %dth biggest number is: %d\r\n", K, result);
+#endif
+
+#if USE_QUICK_SORT
+	for (i = 0; i< N; i++) {
+		sortTable[i] = table[i];
+	}
+
+	ftime(&start);
+
+	result = quickSortSelect();
+
+	ftime(&end);
+	diff = (uint32_t) (1000.0 * (end.time - start.time)
+			+ (end.millitm - start.millitm));
+
+	printf("quickSortSelect took %u milliseconds\r\n", diff);
+	printf("The %dth biggest number is: %d\r\n", K, result);
+#endif
 
 	return EXIT_SUCCESS;
 }
@@ -85,26 +121,22 @@ int main() {
  * Internal function
  ******************************************************************************/
 #pragma GCC diagnostic ignored "-Wunused-function"
-static uint32_t bubbleSortSelect(const uint32_t len, const uint32_t index) {
-	BubbleSort_Desc(table, len);
+static uint32_t bubbleSortSelect(void) {
+	BubbleSort_Desc(sortTable, N);
 
-	return table[index - 1];
+	return sortTable[K - 1];
 }
 
-static uint32_t mergeSortSelect(const uint32_t len, const uint32_t index) {
-	if (len > MERGESORT_SUBARRAY_MAX_LEN * 2) {
-		return 0;
-	}
+static uint32_t mergeSortSelect(void) {
+	MergeSort(sortTable, 0, N - 1);
 
-	MergeSort(table, 0, len - 1);
-
-	return table[len - index + 1];
+	return sortTable[N - K];
 }
 
-static uint32_t quickSortSelect(const uint32_t len, const uint32_t index) {
-	qsort(table, len, sizeof(uint32_t), cmpfunc);
+static uint32_t quickSortSelect(void) {
+	qsort(sortTable, N, sizeof(unsigned int), cmpfunc);
 
-	return table[len - index + 1];
+	return sortTable[N - K];
 }
 #pragma GCC diagnostic pop
 
@@ -118,6 +150,6 @@ static void generateRandomNumberTable(uint32_t* nt, const uint32_t len) {
 }
 
 static int cmpfunc(const void * a, const void * b) {
-	return (*(uint32_t*) a - *(uint32_t*) b);
+	return (*(int*) a - *(int*) b);
 }
 
