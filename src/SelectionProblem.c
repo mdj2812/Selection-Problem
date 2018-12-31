@@ -55,7 +55,7 @@ static unsigned int sortTable[N];
  * Public function
  ******************************************************************************/
 int main() {
-	struct timeb start, end;
+	struct __timeb64 start, end;
 	uint32_t diff;
 	uint32_t result = 0;
 	uint32_t i = 0;
@@ -63,33 +63,16 @@ int main() {
 	generateRandomNumberTable(table, N);
 
 	// TODO: add operation here
-#if USE_BUBBLE_SORT
-	for (i = 0; i< N; i++) {
-		sortTable[i] = table[i];
-	}
-
-	ftime(&start);
-
-	result = bubbleSortSelect();
-
-	ftime(&end);
-	diff = (uint32_t) (1000.0 * (end.time - start.time)
-			+ (end.millitm - start.millitm));
-
-	printf("bubbleSortSelect took %u milliseconds\r\n", diff);
-	printf("The %dth biggest number is: %d\r\n", K, result);
-#endif
-
 #if USE_MERGE_SORT
 	for (i = 0; i< N; i++) {
 		sortTable[i] = table[i];
 	}
 
-	ftime(&start);
+	_ftime64(&start);
 
 	result = mergeSortSelect();
 
-	ftime(&end);
+	_ftime64(&end);
 	diff = (uint32_t) (1000.0 * (end.time - start.time)
 			+ (end.millitm - start.millitm));
 
@@ -102,15 +85,32 @@ int main() {
 		sortTable[i] = table[i];
 	}
 
-	ftime(&start);
+	_ftime64(&start);
 
 	result = quickSortSelect();
 
-	ftime(&end);
+	_ftime64(&end);
 	diff = (uint32_t) (1000.0 * (end.time - start.time)
 			+ (end.millitm - start.millitm));
 
 	printf("quickSortSelect took %u milliseconds\r\n", diff);
+	printf("The %dth biggest number is: %d\r\n", K, result);
+#endif
+
+#if USE_BUBBLE_SORT
+	for (i = 0; i< N; i++) {
+		sortTable[i] = table[i];
+	}
+
+	_ftime64(&start);
+
+	result = bubbleSortSelect();
+
+	_ftime64(&end);
+	diff = (uint32_t) (1000.0 * (end.time - start.time)
+			+ (end.millitm - start.millitm));
+
+	printf("bubbleSortSelect took %u milliseconds\r\n", diff);
 	printf("The %dth biggest number is: %d\r\n", K, result);
 #endif
 

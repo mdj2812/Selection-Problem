@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Internal function declaration
  ******************************************************************************/
-static void merge(uint32_t* A, const const uint32_t p, const uint32_t q,
+static void merge(uint32_t* A, const uint32_t p, const uint32_t q,
 		const uint32_t r);
 
 /*******************************************************************************
