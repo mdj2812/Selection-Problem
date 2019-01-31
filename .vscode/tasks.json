@@ -8,14 +8,11 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "-g", "..\\src\\SelectionProblem.c", "..\\src\\BubbleSort.c", "..\\src\\MergeSort.c", "-o", "${workspaceFolderBasename}"
+                "-g", ".\\src\\SelectionProblem.c", ".\\src\\BubbleSort.c", ".\\src\\MergeSort.c", "-o", ".\\Debug\\${workspaceFolderBasename}"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "options": {
-                "cwd": "Debug"
             },
             "presentation": {
                 "echo": true,
